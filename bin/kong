@@ -7,7 +7,7 @@ require("kong.globalpatches")({ cli = true })
 math.randomseed() -- Generate PRNG seed
 
 local pl_app = require "pl.lapp"
-local pl_utils = require "pl.utils"
+local pl_stringx = require "pl.stringx"
 local pl_tablex = require "pl.tablex"
 local inject_confs = require "kong.cmd.utils.inject_confs"
 
@@ -145,6 +145,6 @@ local resty_cmd = string.format(
   "resty --main-conf \"%s\" --http-conf \"%s\" --stream-conf \"%s\" -e '%s'",
   main_conf, http_conf, stream_conf, inline_code)
 
-local _, code = pl_utils.execute(resty_cmd)
+local _, code = pl_stringx.execute(resty_cmd)
 os.exit(code)
 -- vim: set ft=lua ts=2 sw=2 sts=2 et :

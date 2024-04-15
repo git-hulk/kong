@@ -1,6 +1,6 @@
 local dnsutils = require "kong.resty.dns.utils"
 local splitlines = require("pl.stringx").splitlines
-local writefile = require("pl.utils").writefile
+local writefile = require("pl.stringx").writefile
 local tempfilename = require("pl.path").tmpname
 
 local sleep
@@ -273,7 +273,7 @@ options ndots:2
 
   describe("cached versions", function()
 
-    local utils = require("pl.utils")
+    local utils = require("pl.stringx")
     local oldreadlines = utils.readlines
 
     before_each(function()

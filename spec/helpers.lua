@@ -52,7 +52,6 @@ local Blueprints = require "spec.fixtures.blueprints"
 local pl_stringx = require "pl.stringx"
 local constants = require "kong.constants"
 local pl_tablex = require "pl.tablex"
-local pl_utils = require "pl.utils"
 local pl_path = require "pl.path"
 local pl_file = require "pl.file"
 local version = require "version"
@@ -3560,7 +3559,7 @@ local function render_fixtures(conf, env, prefix, fixtures)
 
         -- write file to prefix
         filename = prefix .. "/" .. filename .. "." .. mocktype
-        assert(pl_utils.writefile(filename, contents))
+        assert(pl_stringx.writefile(filename, contents))
       end
     end
   end
@@ -3569,7 +3568,7 @@ local function render_fixtures(conf, env, prefix, fixtures)
     -- write the mock records to the prefix
     assert(getmetatable(fixtures.dns_mock) == dns_mock,
            "expected dns_mock to be of a helpers.dns_mock class")
-    assert(pl_utils.writefile(prefix .. "/dns_mock_records.json",
+    assert(pl_stringx.writefile(prefix .. "/dns_mock_records.json",
                               tostring(fixtures.dns_mock)))
 
     -- add the mock resolver to the path to ensure the records are loaded
@@ -4207,7 +4206,7 @@ end
   dir = pl_dir,
   path = pl_path,
   file = pl_file,
-  utils = pl_utils,
+  utils = pl_stringx,
 
   -- Kong testing properties
   db = db,

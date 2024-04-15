@@ -1,7 +1,7 @@
 local cjson    = require "cjson"
 local lyaml    = require "lyaml"
 local utils    = require "kong.tools.utils"
-local pl_utils = require "pl.utils"
+local pl_stringx = require "pl.stringx"
 local helpers  = require "spec.helpers"
 local Errors   = require "kong.db.errors"
 local mocker   = require("spec.fixtures.mocker")
@@ -878,7 +878,7 @@ describe("Admin API #off", function()
     end)
 
     it("can load large declarative config (regression test)", function()
-      local config = assert(pl_utils.readfile("spec/fixtures/burst.yml"))
+      local config = assert(pl_stringx.readfile("spec/fixtures/burst.yml"))
       local res = assert(client:send {
         method = "POST",
         path = "/config",

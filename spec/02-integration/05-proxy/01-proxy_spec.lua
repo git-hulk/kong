@@ -1,5 +1,5 @@
 local helpers = require "spec.helpers"
-local utils = require "pl.utils"
+local utils = require "pl.stringx"
 local stringx = require "pl.stringx"
 local http = require "resty.http"
 local atc_compat = require "kong.router.compat"

@@ -1,4 +1,4 @@
-local writefile = require("pl.utils").writefile
+local writefile = require("pl.stringx").writefile
 local tempfilename = require("pl.path").tmpname
 local pretty = require("pl.pretty").write
 

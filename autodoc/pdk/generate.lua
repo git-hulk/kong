@@ -5,7 +5,7 @@
 setmetatable(_G, nil)
 
 local lfs = require("lfs")
-local pl_utils = require "pl.utils"
+local pl_stringx = require "pl.stringx"
 local cjson = require "cjson"
 
 local fmt = string.format
@@ -19,7 +19,7 @@ print("Building PDK docs...")
 
 -- Generate navigation yml
 local cmd = "ldoc -q -i --filter autodoc/pdk/ldoc/filters.nav ./kong/pdk"
-local ok, code, stdout, stderr = pl_utils.executeex(cmd)
+local ok, code, stdout, stderr = pl_stringx.executeex(cmd)
 assert(ok and code == 0, stderr)
 local outputpath = "autodoc/output/_pdk_nav.yml"
 local outfd = assert(io.open(outputpath, "w+"))
@@ -29,7 +29,7 @@ print("  Wrote " .. outputpath)
 
 -- Obtain the list of modules in json form & parse it
 local cmd = 'ldoc -q -i --filter autodoc/pdk/ldoc/filters.json ./kong/pdk'
-local ok, code, stdout, stderr = pl_utils.executeex(cmd)
+local ok, code, stdout, stderr = pl_stringx.executeex(cmd)
 assert(ok and code == 0, stderr)
 local modules = cjson.decode(stdout)
 
@@ -40,7 +40,7 @@ for _,module in ipairs(modules) do
             module.file,
             module.generated_name,
             outputpath)
-  local ok, code, _, stderr = pl_utils.executeex(cmd)
+  local ok, code, _, stderr = pl_stringx.executeex(cmd)
   assert(ok and code == 0, stderr)
   print("  Wrote " .. outputpath)
 end

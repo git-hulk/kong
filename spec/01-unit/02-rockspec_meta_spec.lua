@@ -1,4 +1,4 @@
-local pl_utils = require "pl.utils"
+local pl_stringx = require "pl.stringx"
 local pl_path = require "pl.path"
 local pl_dir = require "pl.dir"
 local meta = require "kong.meta"
@@ -90,7 +90,7 @@ describe("rockspec/meta", function()
   describe("requires", function()
     it("requires in the codebase are defined modules in the rockspec", function()
       for _, src in ipairs(lua_srcs) do
-        local str = pl_utils.readfile(src)
+        local str = pl_stringx.readfile(src)
 
         -- PCRE: require\s*\(?\s*(["''])(kong\.[\w_.-]+[\w_.-])(["''])
         for _, mod in string.gmatch(str, "require%s*%(?%s*([\"'])(kong%.[%w_.-]+[%w_-])%1") do

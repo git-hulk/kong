@@ -1,5 +1,5 @@
 local ngx_ssl = require "ngx.ssl"
-local pl_utils = require "pl.utils"
+local pl_stringx = require "pl.stringx"
 local mlcache = require "kong.resty.mlcache"
 local new_tab = require "table.new"
 local constants = require "kong.constants"
@@ -199,8 +199,8 @@ local function init()
   local conf = kong.configuration
   if conf.ssl_cert[1] then
     default_cert_and_key = parse_key_and_cert {
-      cert = assert(pl_utils.readfile(conf.ssl_cert[1])),
-      key = assert(pl_utils.readfile(conf.ssl_cert_key[1])),
+      cert = assert(pl_stringx.readfile(conf.ssl_cert[1])),
+      key = assert(pl_stringx.readfile(conf.ssl_cert_key[1])),
     }
   end
 end

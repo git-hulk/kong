@@ -1,4 +1,4 @@
-local pl_utils = require "pl.utils"
+local pl_stringx = require "pl.stringx"
 local pl_path = require "pl.path"
 
 
@@ -16,12 +16,12 @@ do
 
     _system_infos = {}
 
-    local ok, _, stdout = pl_utils.executeex("getconf _NPROCESSORS_ONLN")
+    local ok, _, stdout = pl_stringx.executeex("getconf _NPROCESSORS_ONLN")
     if ok then
       _system_infos.cores = tonumber(stdout:sub(1, -2))
     end
 
-    ok, _, stdout = pl_utils.executeex("uname -ms")
+    ok, _, stdout = pl_stringx.executeex("uname -ms")
     if ok then
       _system_infos.uname = stdout:gsub(";", ","):sub(1, -2)
     end

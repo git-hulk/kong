@@ -16,7 +16,6 @@ local x509_name = require "resty.openssl.x509.name"
 local pl_template = require "pl.template"
 local pl_stringx = require "pl.stringx"
 local pl_tablex = require "pl.tablex"
-local pl_utils = require "pl.utils"
 local pl_file = require "pl.file"
 local pl_path = require "pl.path"
 local pl_dir = require "pl.dir"
@@ -223,7 +222,7 @@ end
 
 
 local function get_ulimit()
-  local ok, _, stdout, stderr = pl_utils.executeex "ulimit -n"
+  local ok, _, stdout, stderr = pl_stringx.executeex "ulimit -n"
   if not ok then
     return nil, stderr
   end
@@ -430,7 +429,7 @@ local function prepare_prefixed_interface_dir(usr_path, interface_dir, kong_conf
      and pl_path.exists(usr_interface_path) then
 
     local ln_cmd = "ln -s " .. usr_interface_path .. " " .. interface_path
-    local ok, _, _, err_t = pl_utils.executeex(ln_cmd)
+    local ok, _, _, err_t = pl_stringx.executeex(ln_cmd)
 
     if not ok then
       log.warn(err_t)

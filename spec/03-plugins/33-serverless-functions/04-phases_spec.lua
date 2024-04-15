@@ -4,8 +4,8 @@ local mock_one_fn = [[
   local plugin_name = "%s"
   local filename = "/tmp/" .. plugin_name .. "_output"
   local text = "phase: '%s', index: '%s', plugin: '" .. plugin_name .. "'\n"
-  local readfile = require("pl.utils").readfile
-  local writefile = require("pl.utils").writefile
+  local readfile = require("pl.stringx").readfile
+  local writefile = require("pl.stringx").writefile
 
   return function()
       local file_content, err = readfile(filename) or ""
@@ -81,7 +81,7 @@ for _, plugin_name in ipairs({ "pre-function", "post-function" }) do
         ngx.sleep(0.1) -- wait for log-phase handler to execute
       end
 
-      local content = require("pl.utils").readfile(filename)
+      local content = require("pl.stringx").readfile(filename)
       assert.equal(([[
 phase: 'certificate', index: 'first', plugin: 'pre-function'
 phase: 'certificate', index: 'second', plugin: 'pre-function'

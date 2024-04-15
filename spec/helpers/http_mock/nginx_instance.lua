@@ -6,7 +6,7 @@ local pl_template = require "pl.template"
 local pl_path = require "pl.path"
 local pl_dir = require "pl.dir"
 local pl_file = require "pl.file"
-local pl_utils = require "pl.utils"
+local pl_stringx = require "pl.stringx"
 local shell = require "resty.shell"
 
 local print = print
@@ -37,7 +37,7 @@ function http_mock:start(error_on_exist)
   assert(conf_file:close())
 
   local cmd = "nginx -p " .. self.prefix
-  local ok, code, _, stderr = pl_utils.executeex(cmd)
+  local ok, code, _, stderr = pl_stringx.executeex(cmd)
   assert(ok and code == 0, "failed to start nginx: " .. stderr)
   return true
 end

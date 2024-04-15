@@ -4,7 +4,6 @@ local kill = require "kong.cmd.utils.kill"
 local meta = require "kong.meta"
 local pl_path = require "pl.path"
 local version = require "version"
-local pl_utils = require "pl.utils"
 local pl_stringx = require "pl.stringx"
 local process_secrets = require "kong.cmd.utils.process_secrets"
 
@@ -38,7 +37,7 @@ local nginx_compatible = version.set(unpack(meta._DEPENDENCIES.nginx))
 
 local function is_openresty(bin_path)
   local cmd = fmt("%s -v", bin_path)
-  local ok, _, _, stderr = pl_utils.executeex(cmd)
+  local ok, _, _, stderr = pl_stringx.executeex(cmd)
   log.debug("%s: '%s'", cmd, stderr:sub(1, -2))
   if ok and stderr then
     local version_match = stderr:match(nginx_version_pattern)
@@ -113,7 +112,7 @@ function _M.find_nginx_bin(kong_conf)
     if is_openresty(path_to_check) then
       if path_to_check == "nginx" then
         log.debug("finding executable absolute path from $PATH...")
-        local ok, code, stdout, stderr = pl_utils.executeex("command -v nginx")
+        local ok, code, stdout, stderr = pl_stringx.executeex("command -v nginx")
         if ok and code == 0 then
           path_to_check = pl_stringx.strip(stdout)
 
@@ -159,7 +158,7 @@ function _M.start(kong_conf)
   if kong_conf.nginx_main_daemon == "on" then
     -- running as daemon: capture command output to temp files using the
     -- "executeex" method
-    local ok, _, _, stderr = pl_utils.executeex(cmd)
+    local ok, _, _, stderr = pl_stringx.executeex(cmd)
     if not ok then
       unset_process_secrets_env(has_process_secrets)
       return nil, stderr
@@ -171,7 +170,7 @@ function _M.start(kong_conf)
     -- running in foreground: do not redirect output since long running
     -- processes would produce output filling the disk, use "execute" without
     -- redirection instead.
-    local ok, retcode = pl_utils.execute(cmd)
+    local ok, retcode = pl_stringx.execute(cmd)
     if not ok then
       unset_process_secrets_env(has_process_secrets)
       return nil, fmt("failed to start nginx (exit code: %s)", retcode)
@@ -194,7 +193,7 @@ function _M.check_conf(kong_conf)
 
   log.debug("testing nginx configuration: %s", cmd)
 
-  local ok, retcode, _, stderr = pl_utils.executeex(cmd)
+  local ok, retcode, _, stderr = pl_stringx.executeex(cmd)
   if not ok then
     return nil, fmt("nginx configuration is invalid (exit code %d):\n%s",
                     retcode, stderr)
@@ -229,7 +228,7 @@ function _M.reload(kong_conf)
 
   log.debug("reloading nginx: %s", cmd)
 
-  local ok, _, _, stderr = pl_utils.executeex(cmd)
+  local ok, _, _, stderr = pl_stringx.executeex(cmd)
   if not ok then
     return nil, stderr
   end

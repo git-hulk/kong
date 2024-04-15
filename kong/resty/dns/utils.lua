@@ -12,7 +12,7 @@
 
 
 local _M = {}
-local utils = require("pl.utils")
+local utils = require("pl.stringx")
 local gsub = string.gsub
 local tinsert = table.insert
 local time = ngx.now
