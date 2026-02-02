@@ -14,7 +14,29 @@ local DRIVER_NAME = "openai"
 --
 
 local function handle_stream_event(event_t)
-  return event_t.data
+  local event_data = cjson.decode(event_t.data)
+  if not event_data then
+    return event_t.data, nil, nil
+  end
+
+  if event_data and type(event_data) == "table" and event_data.usage and
+     event_data.usage ~= cjson.null and type(event_data.usage) == "table" then
+    local prompt_cache_tokens = 0
+    if event_data.usage.prompt_tokens_details then
+      prompt_cache_tokens = event_data.usage.prompt_tokens_details.cached_tokens or 0
+    end
+
+    local metadata = {
+      prompt_tokens = event_data.usage.prompt_tokens,
+      prompt_cache_tokens = prompt_cache_tokens,
+      completion_tokens = event_data.usage.completion_tokens,
+      total_tokens = event_data.usage.total_tokens,
+    }
+
+    return event_t.data, nil, metadata
+  end
+
+  return event_t.data, nil, nil
 end
 
 local transformers_to = {
@@ -71,10 +93,10 @@ function _M.from_format(response_string, model_info, route_type)
 
   -- MUST return a string, to set as the response body
   if not transformers_from[route_type] then
-    return nil, fmt("no transformer available from format %s://%s", model_info.provider, route_type)
+    return nil, fmt("no transformer available from format %s://%s", model_info.provider, route_type), nil
   end
 
-  local ok, response_string, err = pcall(transformers_from[route_type], response_string, model_info)
+  local ok, response_string, err, metadata = pcall(transformers_from[route_type], response_string, model_info)
   if not ok then
     err = response_string
   end
@@ -83,10 +105,10 @@ function _M.from_format(response_string, model_info, route_type)
                     model_info.provider,
                     route_type,
                     err or "unexpected_error"
-                  )
+                  ), nil
   end
 
-  return response_string, nil
+  return response_string, nil, metadata
 end
 
 function _M.to_format(request_table, model_info, route_type)

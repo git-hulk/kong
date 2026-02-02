@@ -230,6 +230,8 @@ local function start_to_event(event_data, model_info)
                     and meta.usage.input_tokens,
     completion_tokens = meta.usage
                     and meta.usage.output_tokens,
+    prompt_cache_tokens = meta.usage
+                    and meta.usage.cache_read_input_tokens,
     model = meta.model,
     stop_reason = meta.stop_reason,
     stop_sequence = meta.stop_sequence,
@@ -357,6 +359,7 @@ local transformers_from = {
         usage = {
           prompt_tokens = usage.input_tokens,
           completion_tokens = usage.output_tokens,
+          prompt_cache_tokens = usage.cache_read_input_tokens,
           total_tokens = usage.input_tokens and usage.output_tokens and
             usage.input_tokens + usage.output_tokens,
         }

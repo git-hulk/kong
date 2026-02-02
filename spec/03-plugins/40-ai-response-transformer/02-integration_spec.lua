@@ -92,6 +92,7 @@ local _EXPECTED_CHAT_STATS = {
     },
     usage = {
       prompt_tokens = 25,
+      prompt_cache_tokens = 0,
       completion_tokens = 12,
       total_tokens = 37,
       time_per_token = 1,

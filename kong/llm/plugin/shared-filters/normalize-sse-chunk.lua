@@ -117,9 +117,11 @@ local function handle_streaming_frame(conf, chunk, finished)
       if conf.model.provider == "gemini" then
         ai_plugin_o11y.metrics_set("llm_prompt_tokens_count", metadata.prompt_tokens or 0)
         ai_plugin_o11y.metrics_set("llm_completion_tokens_count", metadata.completion_tokens or 0)
+        ai_plugin_o11y.metrics_set("llm_prompt_cache_tokens_count", metadata.prompt_cache_tokens or 0)
       else
         ai_plugin_o11y.metrics_add("llm_prompt_tokens_count", metadata.prompt_tokens or 0)
         ai_plugin_o11y.metrics_add("llm_completion_tokens_count", metadata.completion_tokens or 0)
+        ai_plugin_o11y.metrics_add("llm_prompt_cache_tokens_count", metadata.prompt_cache_tokens or 0)
       end
     end
   end
@@ -141,6 +143,7 @@ local function handle_streaming_frame(conf, chunk, finished)
     local response = body_buffer and body_buffer:get()
 
     local prompt_tokens_count = ai_plugin_o11y.metrics_get("llm_prompt_tokens_count")
+    local prompt_cache_tokens_count = ai_plugin_o11y.metrics_get("llm_prompt_cache_tokens_count")
     local completion_tokens_count = ai_plugin_o11y.metrics_get("llm_completion_tokens_count")
 
     if conf.logging and conf.logging.log_statistics then
@@ -181,6 +184,7 @@ local function handle_streaming_frame(conf, chunk, finished)
       response = (conf.logging or EMPTY).log_payloads and response,
       usage = {
         prompt_tokens = prompt_tokens_count,
+        prompt_cache_tokens = prompt_cache_tokens_count,
         completion_tokens = completion_tokens_count,
         total_tokens = ai_plugin_o11y.metrics_get("llm_total_tokens_count"),
       }

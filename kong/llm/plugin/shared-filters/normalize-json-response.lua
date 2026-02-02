@@ -55,6 +55,10 @@ local function transform_body(conf)
       ai_plugin_o11y.metrics_set("llm_prompt_tokens_count", t.usage.prompt_tokens)
     end
 
+    if t and t.usage and t.usage.prompt_cache_tokens then
+      ai_plugin_o11y.metrics_set("llm_prompt_cache_tokens_count", t.usage.prompt_cache_tokens)
+    end
+
     if t and t.usage and t.usage.completion_tokens then
       ai_plugin_o11y.metrics_set("llm_completion_tokens_count", t.usage.completion_tokens)
     end

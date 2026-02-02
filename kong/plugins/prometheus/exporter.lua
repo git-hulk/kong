@@ -426,6 +426,11 @@ local function log(message, serialized)
         metrics.ai_llm_tokens:inc(ai_metrics.usage.prompt_tokens, labels_table_ai_llm_tokens)
       end
 
+      if ai_metrics.usage and ai_metrics.usage.prompt_cache_tokens and ai_metrics.usage.prompt_cache_tokens > 0 then
+        labels_table_ai_llm_tokens[7] = "prompt_cache_tokens"
+        metrics.ai_llm_tokens:inc(ai_metrics.usage.prompt_cache_tokens, labels_table_ai_llm_tokens)
+      end
+
       if ai_metrics.usage and ai_metrics.usage.completion_tokens and ai_metrics.usage.completion_tokens > 0 then
         labels_table_ai_llm_tokens[7] = "completion_tokens"
         metrics.ai_llm_tokens:inc(ai_metrics.usage.completion_tokens, labels_table_ai_llm_tokens)

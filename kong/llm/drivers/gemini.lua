@@ -104,6 +104,7 @@ local function handle_stream_event(event_t, model_info, route_type)
     metadata.finish_reason     = finish_reason
     metadata.completion_tokens = event.usageMetadata and event.usageMetadata.candidatesTokenCount or 0
     metadata.prompt_tokens     = event.usageMetadata and event.usageMetadata.promptTokenCount or 0
+    metadata.prompt_cache_tokens = event.usageMetadata and event.usageMetadata.cachedContentTokenCount or 0
 
     local new_event = {
       model = model_info.name,
@@ -126,6 +127,7 @@ local function handle_stream_event(event_t, model_info, route_type)
     metadata.finish_reason     = finish_reason
     metadata.completion_tokens = event.usageMetadata and event.usageMetadata.candidatesTokenCount or 0
     metadata.prompt_tokens     = event.usageMetadata and event.usageMetadata.promptTokenCount or 0
+    metadata.prompt_cache_tokens = event.usageMetadata and event.usageMetadata.cachedContentTokenCount or 0
 
     if event.candidates and #event.candidates > 0 then
       local new_event = {
@@ -446,9 +448,10 @@ local function from_gemini_chat_openai(response, model_info, route_type)
     -- process analytics
     if response.usageMetadata then
       messages.usage = {
-        prompt_tokens = response.usageMetadata.promptTokenCount,
-        completion_tokens = response.usageMetadata.candidatesTokenCount,
-        total_tokens = response.usageMetadata.totalTokenCount,
+        prompt_tokens = response.usageMetadata.promptTokenCount or 0,
+        completion_tokens = response.usageMetadata.candidatesTokenCount or 0,
+        total_tokens = response.usageMetadata.totalTokenCount or 0,
+        prompt_cache_tokens = response.usageMetadata.cachedContentTokenCount or 0,
       }
     end
 
